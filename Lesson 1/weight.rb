@@ -9,7 +9,7 @@ puts "Пожалуйста, укажите ваш рост"
 height = gets.chomp.to_i
 
 weight = (height - 110) * 1.15
-if weight > 0
+if weight >= 0
   puts "#{name}, ваш идеальный вес равен #{weight.to_i}"
 else
   puts "#{name}, ваш вес уже оптимальный!"
