@@ -1,24 +1,23 @@
 class Station
-  attr_reader :trains_on_station, :name
+  attr_reader :trains, :name
 
   def initialize(name)
     @name = name
-    @trains_on_station = []
+    @trains = []
   end
 
   def get(train)
-    @trains_on_station << train
+    @trains << train
   end
 
-  def trains_on_station_by_type(type)
-    puts "Список поездов по типу #{type}:"
-    @trains_on_station.each do | train |
-      puts train if train.type == type
+  def trains_by_type(type)
+    @trains.select do | train |
+      train if train.type == type
     end
   end
 
   def send(train)
-    @trains_on_station.delete(train)
+    @trains.delete(train)
   end
 end
 
@@ -38,11 +37,16 @@ class Route
     @list_of_stations.delete(station)
   end
 
+  def first
+    @list_of_stations.first
+  end
+
+  def last
+    @list_of_stations.last
+  end
 end
 
-
 class Train
-
   attr_reader :number, :type, :number_of_wagons, :route, :current_station
   attr_accessor :speed
 
@@ -58,7 +62,6 @@ class Train
   end
 
   def add_wagon
-
     @number_of_wagons += 1 if @speed == 0
   end
 
@@ -68,28 +71,37 @@ class Train
 
   def set_route(route)
     @route = route
-    @current_station = route.list_of_stations[0]
+    @current_station = route.first
     @current_station.get(self)
   end
 
   def move_forward
-    @current_station = next_station
-    @current_station.get(self)
+    if @current_station != route.last
+      @current_station.send(self)
+      @current_station = next_station
+      @current_station.get(self)
+    end
   end
 
   def move_back
-    @current_station = previous_station
-    @current_station.get(self)
+    if @current_station != route.first
+      @current_station.send(self)
+      @current_station = previous_station
+      @current_station.get(self)
+    end
   end
 
   def next_station
-    i = route.list_of_stations.index(@current_station) + 1
-    route.list_of_stations[i]
+    if route.last != @current_station
+      i = route.list_of_stations.index(@current_station) + 1
+      route.list_of_stations[i]
+    end
   end
 
   def previous_station
-    i = route.list_of_stations.index(@current_station) - 1
-    route.list_of_stations[i]
+    if route.first != @current_station
+      i = route.list_of_stations.index(@current_station) - 1
+      route.list_of_stations[i]
+    end
   end
-
 end
