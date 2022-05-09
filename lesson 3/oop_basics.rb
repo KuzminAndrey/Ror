@@ -12,7 +12,7 @@ class Station
 
   def trains_by_type(type)
     @trains.select do | train |
-      train if train.type == type
+      train.type == type
     end
   end
 
@@ -93,15 +93,15 @@ class Train
 
   def next_station
     if route.last != @current_station
-      i = route.list_of_stations.index(@current_station) + 1
-      route.list_of_stations[i]
+      index = route.list_of_stations.index(@current_station) + 1
+      route.list_of_stations[index]
     end
   end
 
   def previous_station
     if route.first != @current_station
-      i = route.list_of_stations.index(@current_station) - 1
-      route.list_of_stations[i]
+      index = route.list_of_stations.index(@current_station) - 1
+      route.list_of_stations[index]
     end
   end
 end
